@@ -8,7 +8,7 @@ Don't worry, Be happy
 Install the latest version with
 
 ```bash
-$ composer require shubinmi/ant-orm-php
+$ composer require shubinmi/salesforce-bulk-api
 ```
 
 ## Basic Usage
