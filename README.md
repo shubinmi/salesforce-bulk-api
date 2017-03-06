@@ -81,7 +81,8 @@ foreach ($errorsOnInsert as $error) {
     } else {
         echo 'Batch ' . $errorsBatch->getId() . ' fail for next rows:' . PHP_EOL;
         foreach ($errorsElementNumber as $errorMsgKey => $errorRowNumber) {
-            echo 'Row number = ' . $errorRowNumber . ' Error message = ' . $errorsMsg[$errorMsgKey] . PHP_EOL;
+            echo 'Row number = ' . $errorRowNumber 
+                . ' Error message = ' . $errorsMsg[$errorMsgKey] . PHP_EOL;
         }
     }
 }
