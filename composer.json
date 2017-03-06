@@ -1,0 +1,33 @@
+{
+    "name": "shubinmi/salesforce-bulk-api",
+    "description": "Salesforce Bulk Api. Easy way to manipulate your Salesforce data.",
+    "keywords": [
+        "salesforce",
+        "bulk",
+        "api"
+    ],
+    "homepage": "https://github.com/shubinmi/salesforce-bulk-api",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Maxim Shubin",
+            "email": "shubinmi@gmail.com",
+            "homepage": "https://github.com/shubinmi",
+            "role": "Founder and cyclist"
+        }
+    ],
+    "support": {
+        "wiki": "https://github.com/shubinmi/salesforce-bulk-api",
+        "source": "https://github.com/shubinmi/salesforce-bulk-api"
+    },
+    "require": {
+        "php": ">=5.4",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "SalesforceBulkApi\\": "src/"
+        }
+    }
+}
