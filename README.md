@@ -22,8 +22,8 @@ use SalesforceBulkApi\conf\LoginParams;
 use SalesforceBulkApi\services\JobSFApiService;
 
 $params = (new LoginParams)
-    ->setUserName('myLogin')
-    ->setUserPass('MyPass')
+    ->setUserName('mySFLogin')
+    ->setUserPass('MySFPass')
     ->setUserSecretToken('mySecretTokenFomSF');
 
 $jobRequest = (new CreateJobDto)
