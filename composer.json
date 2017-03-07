@@ -1,7 +1,8 @@
 {
     "name": "shubinmi/salesforce-bulk-api",
-    "description": "Salesforce Bulk Api. Easy way to manipulate your Salesforce data.",
+    "description": "Client for Salesforce Bulk Api. Easy way to manipulate your Salesforce data.",
     "keywords": [
+        "client",
         "salesforce",
         "bulk",
         "api"

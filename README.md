@@ -1,4 +1,4 @@
-# Salesforce Bulk Api 
+# Client for Salesforce Bulk Api 
 ## Easy way to manipulate your Salesforce data
 
 Don't worry, Be happy
