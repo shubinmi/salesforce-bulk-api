@@ -2,7 +2,7 @@
 
 namespace SalesforceBulkApi\dto;
 
-use common\library\hydrators\ConstructFromArrayOrJson;
+use BaseHelpers\hydrators\ConstructFromArrayOrJson;
 
 class ResultAtBatchDto extends ConstructFromArrayOrJson
 {
@@ -22,9 +22,24 @@ class ResultAtBatchDto extends ConstructFromArrayOrJson
     protected $created;
 
     /**
+     * For resultId from Query batch
+     *
+     * @var string
+     */
+    protected $result;
+
+    /**
      * @var array
      */
     protected $errors;
+
+    public function __construct($params = null)
+    {
+        parent::__construct($params);
+        if (empty($this->id) && is_string($params)) {
+            $this->result = $params;
+        }
+    }
 
     /**
      * @return string

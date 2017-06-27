@@ -129,4 +129,40 @@ class BatchApiSF
 
         return $result;
     }
+
+    /**
+     * @param ApiSalesforce $api
+     * @param BatchInfoDto  $batch
+     * @param string        $batchResultId
+     *
+     * @return array
+     * @throws SFClientException
+     */
+    public static function result(ApiSalesforce $api, BatchInfoDto $batch, $batchResultId)
+    {
+        $request  = new Request(
+            'GET',
+            sprintf(self::$endpoint, $api->getSession()->getInstance(), $batch->getJobId()) . '/' . $batch->getId()
+            . '/result/' . $batchResultId,
+            [
+                'Content-Type'   => 'application/json; charset=UTF8',
+                'X-SFDC-Session' => $api->getSession()->getSessionId()
+            ]
+        );
+        $response = ApiHelper::getResponse($request, $api);
+        try {
+            $data   = json_decode($response->getBody()->getContents(), true);
+            $result = [];
+            foreach ($data as $item) {
+                $result[] = $item;
+            }
+        } catch (\Exception $e) {
+            $msg = 'SF batch api at parse of response error: ' . $e->getMessage()
+                . ' ; Response = ' . $response->getBody()->getContents();
+            $api->addError($msg);
+            throw new SFClientException($msg);
+        }
+
+        return $result;
+    }
 }
