@@ -2,7 +2,7 @@
 
 namespace SalesforceBulkApi\dto;
 
-use common\library\hydrators\ConstructFromArrayOrJson;
+use BaseHelpers\hydrators\ConstructFromArrayOrJson;
 
 /**
  * For more info follow the link

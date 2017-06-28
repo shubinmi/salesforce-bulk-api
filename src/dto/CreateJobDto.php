@@ -2,13 +2,12 @@
 
 namespace SalesforceBulkApi\dto;
 
-use common\library\hydrators\ConstructFromArrayOrJson;
+use BaseHelpers\hydrators\ConstructFromArrayOrJson;
 
 /**
  * For more info follow the link
  * https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_reference_jobinfo.htm
  */
-
 class CreateJobDto extends ConstructFromArrayOrJson
 {
     const CONTENT_TYPE_JSON     = 'JSON';

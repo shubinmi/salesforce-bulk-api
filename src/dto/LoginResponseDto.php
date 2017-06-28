@@ -2,7 +2,7 @@
 
 namespace SalesforceBulkApi\dto;
 
-use common\library\hydrators\ConstructFromArrayOrJson;
+use BaseHelpers\hydrators\ConstructFromArrayOrJson;
 use SalesforceBulkApi\exceptions\SFClientException;
 
 class LoginResponseDto extends ConstructFromArrayOrJson
