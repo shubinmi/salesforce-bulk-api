@@ -90,7 +90,7 @@ class BatchApiSF
             $data   = json_decode($response->getBody()->getContents(), true);
             $result = [];
             foreach ($data['batchInfo'] as $item) {
-                $result[] = new BatchInfoDto($item);
+                $result[$item['id']] = new BatchInfoDto($item);
             }
         } catch (\Exception $e) {
             $msg = 'SF batch api at parse of response error: ' . $e->getMessage()

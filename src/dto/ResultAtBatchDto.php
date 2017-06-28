@@ -94,4 +94,23 @@ class ResultAtBatchDto extends ConstructFromArrayOrJson
     {
         return $this->errors;
     }
+
+    /**
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param string $result
+     *
+     * @return $this
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+        return $this;
+    }
 }

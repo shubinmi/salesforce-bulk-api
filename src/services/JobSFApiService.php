@@ -7,6 +7,7 @@ use SalesforceBulkApi\api\JobApiSF;
 use SalesforceBulkApi\conf\LoginParams;
 use SalesforceBulkApi\dto\BatchInfoDto;
 use SalesforceBulkApi\dto\CreateJobDto;
+use SalesforceBulkApi\dto\ResultAtBatchDto;
 use SalesforceBulkApi\objects\SFBatchErrors;
 use SalesforceBulkApi\objects\SFJob;
 
@@ -51,8 +52,17 @@ class JobSFApiService
      */
     public function addBatchToJob(array $data)
     {
-        $data  = json_encode($data);
-        $batch = BatchApiSF::addToJob($this->api, $this->job->getJobInfo(), $data);
+        return $this->addQueryBatchToJob(json_encode($data));
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return $this
+     */
+    public function addQueryBatchToJob($query)
+    {
+        $batch = BatchApiSF::addToJob($this->api, $this->job->getJobInfo(), $query);
         $this->job->addBatchInfo($batch);
 
         return $this;
@@ -87,6 +97,46 @@ class JobSFApiService
     }
 
     /**
+     * @return ResultAtBatchDto[][]
+     */
+    public function getResults()
+    {
+        $results = [];
+        foreach ($this->job->getBatchesInfo() as $batchInfoDto) {
+            $results[$batchInfoDto->getId()] = BatchApiSF::results($this->api, $batchInfoDto);
+        }
+        $this->job->setBatchesResults($results);
+
+        return $results;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueriesResults()
+    {
+        if (!$this->job->getBatchesResults()) {
+            return [];
+        }
+        $queriesResults = [];
+        foreach ($this->job->getBatchesResults() as $batchId => $results) {
+            $queriesResults[$batchId] = [];
+            /** @var ResultAtBatchDto $result */
+            foreach ($results as $result) {
+                $resultId    = $result->getId() ?: $result->getResult();
+                $batchesInfo = $this->job->getBatchesInfo();
+                if (empty($batchesInfo[$batchId])) {
+                    return $queriesResults;
+                }
+                $queriesResults[$batchId][$resultId] =
+                    BatchApiSF::result($this->api, $batchesInfo[$batchId], $resultId);
+            }
+        }
+
+        return $queriesResults;
+    }
+
+    /**
      * @return SFBatchErrors[]
      */
     public function getErrors()
@@ -101,8 +151,13 @@ class JobSFApiService
                     continue;
                 }
             }
-            $results = BatchApiSF::results($this->api, $batchInfoDto);
-            $i       = 0;
+            $results = $this->job->getBatchesResults();
+            if (empty($results[$batchInfoDto->getId()])) {
+                $results = BatchApiSF::results($this->api, $batchInfoDto);
+            } else {
+                $results = $results[$batchInfoDto->getId()];
+            }
+            $i = 0;
             foreach ($results as $result) {
                 if (!$result->isSuccess()) {
                     $error->addError($i, json_encode($result->getErrors()));

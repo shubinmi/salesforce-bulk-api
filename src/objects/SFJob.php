@@ -4,6 +4,7 @@ namespace SalesforceBulkApi\objects;
 
 use SalesforceBulkApi\dto\BatchInfoDto;
 use SalesforceBulkApi\dto\JobInfoDto;
+use SalesforceBulkApi\dto\ResultAtBatchDto;
 
 class SFJob
 {
@@ -16,6 +17,11 @@ class SFJob
      * @var BatchInfoDto[]
      */
     private $batchesInfo;
+
+    /**
+     * @var ResultAtBatchDto[][]
+     */
+    private $batchesResults;
 
     /**
      * @return JobInfoDto
@@ -63,6 +69,25 @@ class SFJob
     public function addBatchInfo(BatchInfoDto $dto)
     {
         $this->batchesInfo[] = $dto;
+        return $this;
+    }
+
+    /**
+     * @return ResultAtBatchDto[][]
+     */
+    public function getBatchesResults()
+    {
+        return $this->batchesResults;
+    }
+
+    /**
+     * @param ResultAtBatchDto[][] $batchesResults
+     *
+     * @return $this
+     */
+    public function setBatchesResults(array $batchesResults)
+    {
+        $this->batchesResults = $batchesResults;
         return $this;
     }
 }
