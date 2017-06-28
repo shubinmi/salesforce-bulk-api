@@ -2,7 +2,7 @@
 
 namespace SalesforceBulkApi\conf;
 
-use common\library\hydrators\ConstructFromArrayOrJson;
+use BaseHelpers\hydrators\ConstructFromArrayOrJson;
 
 class LoginParams extends ConstructFromArrayOrJson
 {
@@ -20,6 +20,16 @@ class LoginParams extends ConstructFromArrayOrJson
      * @var string
      */
     protected $userSecretToken;
+
+    /**
+     * @var string
+     */
+    protected $apiVersion = '39.0';
+
+    /**
+     * @var bool
+     */
+    protected $asPartner = true;
 
     /**
      * @return string
@@ -75,6 +85,59 @@ class LoginParams extends ConstructFromArrayOrJson
     public function setUserSecretToken($userSecretToken)
     {
         $this->userSecretToken = $userSecretToken;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
+    }
+
+    /**
+     * @param string $apiVersion
+     *
+     * @return $this
+     */
+    public function setApiVersion($apiVersion)
+    {
+        $this->apiVersion = $apiVersion;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function amIPartner()
+    {
+        return $this->asPartner;
+    }
+
+    /**
+     * @return bool
+     */
+    public function amIEnterprise()
+    {
+        return !$this->asPartner;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAsPartner()
+    {
+        $this->asPartner = true;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAsEnterprise()
+    {
+        $this->asPartner = false;
         return $this;
     }
 }

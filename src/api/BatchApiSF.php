@@ -15,7 +15,7 @@ class BatchApiSF
     /**
      * @var string
      */
-    public static $endpoint = 'https://%s.salesforce.com/services/async/39.0/job/%s/batch';
+    public static $endpoint = 'https://%s.salesforce.com/services/async/%s/job/%s/batch';
 
     /**
      * @param ApiSalesforce $api
@@ -26,9 +26,11 @@ class BatchApiSF
      */
     public static function addToJob(ApiSalesforce $api, JobInfoDto $job, $data)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
+        $instance = $api->getSession()->getInstance();
         $request  = new Request(
             'POST',
-            sprintf(self::$endpoint, $api->getSession()->getInstance(), $job->getId()),
+            sprintf(self::$endpoint, $instance, $version, $job->getId()),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -48,9 +50,12 @@ class BatchApiSF
      */
     public static function info(ApiSalesforce $api, BatchInfoDto $batch)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
+        $instance = $api->getSession()->getInstance();
         $request  = new Request(
             'GET',
-            sprintf(self::$endpoint, $api->getSession()->getInstance(), $batch->getJobId()) . '/' . $batch->getId(),
+            sprintf(self::$endpoint, $instance, $version, $batch->getJobId()) . '/'
+            . $batch->getId(),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -70,9 +75,11 @@ class BatchApiSF
      */
     public static function infoForAllInJob(ApiSalesforce $api, JobInfoDto $job)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
+        $instance = $api->getSession()->getInstance();
         $request  = new Request(
             'GET',
-            sprintf(self::$endpoint, $api->getSession()->getInstance(), $job->getId()),
+            sprintf(self::$endpoint, $instance, $version, $job->getId()),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -104,10 +111,12 @@ class BatchApiSF
      */
     public static function results(ApiSalesforce $api, BatchInfoDto $batch)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
+        $instance = $api->getSession()->getInstance();
         $request  = new Request(
             'GET',
-            sprintf(self::$endpoint, $api->getSession()->getInstance(), $batch->getJobId()) . '/' . $batch->getId()
-            . '/result',
+            sprintf(self::$endpoint, $instance, $version, $batch->getJobId())
+            . '/' . $batch->getId() . '/result',
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -140,10 +149,12 @@ class BatchApiSF
      */
     public static function result(ApiSalesforce $api, BatchInfoDto $batch, $batchResultId)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
+        $instance = $api->getSession()->getInstance();
         $request  = new Request(
             'GET',
-            sprintf(self::$endpoint, $api->getSession()->getInstance(), $batch->getJobId()) . '/' . $batch->getId()
-            . '/result/' . $batchResultId,
+            sprintf(self::$endpoint, $instance, $version, $batch->getJobId())
+            . '/' . $batch->getId() . '/result/' . $batchResultId,
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()

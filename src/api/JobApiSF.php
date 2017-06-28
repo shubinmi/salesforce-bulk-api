@@ -13,7 +13,7 @@ class JobApiSF
     /**
      * @var string
      */
-    public static $endpoint = 'https://%s.salesforce.com/services/async/39.0/job';
+    public static $endpoint = 'https://%s.salesforce.com/services/async/%s/job';
 
     /**
      * @param ApiSalesforce $api
@@ -23,9 +23,10 @@ class JobApiSF
      */
     public static function create(ApiSalesforce $api, CreateJobDto $dto)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
         $request  = new Request(
             'POST',
-            sprintf(self::$endpoint, $api->getSession()->getInstance()),
+            sprintf(self::$endpoint, $api->getSession()->getInstance(), $version),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -45,9 +46,10 @@ class JobApiSF
      */
     public static function detail(ApiSalesforce $api, JobInfoDto $job)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
         $request  = new Request(
             'GET',
-            sprintf(self::$endpoint, $api->getSession()->getInstance()) . '/' . $job->getId(),
+            sprintf(self::$endpoint, $api->getSession()->getInstance(), $version) . '/' . $job->getId(),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()
@@ -66,9 +68,10 @@ class JobApiSF
      */
     public static function close(ApiSalesforce $api, JobInfoDto $job)
     {
+        $version  = $api->getLoginParams()->getApiVersion();
         $request  = new Request(
             'POST',
-            sprintf(self::$endpoint, $api->getSession()->getInstance()) . '/' . $job->getId(),
+            sprintf(self::$endpoint, $api->getSession()->getInstance(), $version) . '/' . $job->getId(),
             [
                 'Content-Type'   => 'application/json; charset=UTF8',
                 'X-SFDC-Session' => $api->getSession()->getSessionId()

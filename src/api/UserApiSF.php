@@ -16,7 +16,7 @@ class UserApiSF
     /**
      * @var string
      */
-    public static $endpoint = 'https://login.salesforce.com/services/Soap/u/39.0';
+    public static $endpoint = 'https://login.salesforce.com/services/Soap/%s/%s';
 
     /**
      * @param ApiSalesforce $api
@@ -26,9 +26,11 @@ class UserApiSF
      */
     public static function login(ApiSalesforce $api)
     {
+        $asWho   = $api->getLoginParams()->amIPartner() ? 'u' : 'c';
+        $version = $api->getLoginParams()->getApiVersion();
         $request = new Request(
             'POST',
-            self::$endpoint,
+            sprintf(self::$endpoint, $asWho, $version),
             [
                 'Content-Type' => 'text/xml; charset=UTF8',
                 'SOAPAction'   => 'login'
@@ -55,7 +57,8 @@ class UserApiSF
             $fail = $dom->getElementsByTagName('faultstring');
             if ($fail->length == 0) {
                 throw new SFClientException(
-                    'SF Api waiting behavior changed. Error: incorrect response = ' . $response->getBody()->getContents()
+                    'SF Api waiting behavior changed. Error: incorrect response = ' . $response->getBody()->getContents(
+                    )
                 );
             }
             $error = 'API error: ' . $fail[0]->nodeValue;

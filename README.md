@@ -21,19 +21,19 @@ use SalesforceBulkApi\objects\SFBatchErrors;
 use SalesforceBulkApi\conf\LoginParams;
 use SalesforceBulkApi\services\JobSFApiService;
 
+// Set up API Client
 $params = (new LoginParams)
     ->setUserName('mySFLogin')
     ->setUserPass('MySFPass')
     ->setUserSecretToken('mySecretTokenFomSF');
 
+// Set up Insert SF job
 $jobRequest = (new CreateJobDto)
     ->setObject('My_User__c')
     ->setOperation(CreateJobDto::OPERATION_INSERT);
 
-$insertJob = new JobSFApiService($params);
-$insertJob->initJob($jobRequest);
-
-$data = [
+// Data for Insert to custom SF entity
+$data1 = [
     [
         'Email__c' => 'new@user.net',
         'First_Name__c' => 'New Net'
@@ -43,14 +43,30 @@ $data = [
         'First_Name__c' => 'New Org'
     ]
 ];
-$insertJob
-    ->addBatchToJob($data)
+$data2 = [
+    [
+        'Email__c' => 'new1@user.net',
+        'First_Name__c' => 'New1 Net'
+    ],
+    [
+        'Email__c' => 'new1@user.org',
+        'First_Name__c' => 'New1 Org'
+    ]
+];
+
+// Init Insert job and pull data
+$insertJob = (new JobSFApiService($params))
+    ->initJob($jobRequest)
+    ->addBatchToJob($data1)
+    ->addBatchToJob($data2)
     ->closeJob();
 
+// Set up params for Upsert SF job
 $jobRequest
     ->setOperation(CreateJobDto::OPERATION_UPSERT)
     ->setExternalIdFieldName('Email__c');
 
+// Do Upsert job
 $upsertJob = new JobSFApiService($params);
 $upsertJob->initJob($jobRequest);
 
@@ -68,9 +84,11 @@ $upsertJob
     ->addBatchToJob($data)
     ->closeJob();
 
+// Collect jobs errors
 $errorsOnInsert = $insertJob->waitingForComplete()->getErrors();
 $errorsOnUpsert = $upsertJob->waitingForComplete()->getErrors();
 
+// Operate with errors
 foreach ($errorsOnInsert as $error) {
     /** @var SFBatchErrors $error */
     $errorsBatch         = $error->getBatchInfo();

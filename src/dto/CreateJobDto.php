@@ -79,7 +79,7 @@ class CreateJobDto extends ConstructFromArrayOrJson
      */
     public function setObject($object)
     {
-        $this->object = $object . '__c';
+        $this->object = $object;
         return $this;
     }
 
