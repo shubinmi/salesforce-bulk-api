@@ -159,7 +159,7 @@ class JobSFApiService
             }
             $i = 0;
             foreach ($results as $result) {
-                if (!$result->isSuccess()) {
+                if (!$result->isSuccess() && $result->getErrors()) {
                     $error->addError($i, json_encode($result->getErrors()));
                 }
                 ++$i;
