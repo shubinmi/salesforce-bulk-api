@@ -16,7 +16,7 @@ class UserApiSF
     /**
      * @var string
      */
-    public static $endpoint = 'https://login.salesforce.com/services/Soap/%s/%s';
+    public static $endpoint = 'https://%s.salesforce.com/services/Soap/%s/%s';
 
     /**
      * @param ApiSalesforce $api
@@ -28,9 +28,11 @@ class UserApiSF
     {
         $asWho   = $api->getLoginParams()->amIPartner() ? 'u' : 'c';
         $version = $api->getLoginParams()->getApiVersion();
+        $endpointPrefix = $api->getLoginParams()->getEndpointPrefix();
+        
         $request = new Request(
             'POST',
-            sprintf(self::$endpoint, $asWho, $version),
+            sprintf(self::$endpoint, $endpointPrefix, $asWho, $version),
             [
                 'Content-Type' => 'text/xml; charset=UTF8',
                 'SOAPAction'   => 'login'
