@@ -32,6 +32,11 @@ class LoginParams extends ConstructFromArrayOrJson
     protected $asPartner = true;
 
     /**
+     * @var string
+     */
+    protected $endpointPrefix = 'login';
+    
+    /**
      * @return string
      */
     public function getUserName()
@@ -140,4 +145,41 @@ class LoginParams extends ConstructFromArrayOrJson
         $this->asPartner = false;
         return $this;
     }
+    
+     /**
+     * @return string
+     */
+    public function getEndpointPrefix()
+        {
+        return $this->endpointPrefix;
+        }
+
+    /**
+     * @return $this
+     */
+    public function setEndpointPrefixAsProduction()
+        {
+        $this->endpointPrefix = 'login';
+        return $this;
+        }
+
+    /**
+     * @return $this
+     */
+    public function setEndpointPrefixAsSandbox()
+        {
+        $this->endpointPrefix = 'test';
+        return $this;
+        }
+
+    /**
+     * @param string $endpointPrefix
+     *
+     * @return $this
+     */
+    public function setEndpointPrefix($endpointPrefix)
+        {
+        $this->endpointPrefix = $endpointPrefix;
+        return $this;
+        }
 }
