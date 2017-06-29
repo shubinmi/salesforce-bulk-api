@@ -26,10 +26,10 @@ class UserApiSF
      */
     public static function login(ApiSalesforce $api)
     {
-        $asWho   = $api->getLoginParams()->amIPartner() ? 'u' : 'c';
-        $version = $api->getLoginParams()->getApiVersion();
+        $asWho          = $api->getLoginParams()->amIPartner() ? 'u' : 'c';
+        $version        = $api->getLoginParams()->getApiVersion();
         $endpointPrefix = $api->getLoginParams()->getEndpointPrefix();
-        
+
         $request = new Request(
             'POST',
             sprintf(self::$endpoint, $endpointPrefix, $asWho, $version),
