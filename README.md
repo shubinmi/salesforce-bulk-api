@@ -106,3 +106,9 @@ foreach ($errorsOnInsert as $error) {
 }
 
 ```
+
+## Contribute safely
+
+```bash
+$ sh ./vendor/phpunit/phpunit/phpunit ./tests/services
+```

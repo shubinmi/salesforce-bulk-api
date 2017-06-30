@@ -85,13 +85,13 @@ class JobSFApiService
     public function waitingForComplete()
     {
         $batches = BatchApiSF::infoForAllInJob($this->api, $this->job->getJobInfo());
+        $this->job->setBatchesInfo($batches);
         foreach ($batches as $batch) {
             if (in_array($batch->getState(), [BatchInfoDto::STATE_IN_PROGRESS, BatchInfoDto::STATE_QUEUED])) {
                 sleep(rand(1, 3));
-                $this->waitingForComplete();
+                return $this->waitingForComplete();
             }
         }
-        $this->job->setBatchesInfo($batches);
 
         return $this;
     }
