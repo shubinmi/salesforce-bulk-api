@@ -3,6 +3,8 @@
 
 Don't worry, Be happy
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/c892e96e789572222762/maintainability)](https://codeclimate.com/github/shubinmi/salesforce-bulk-api/maintainability)
+
 ## Installation
 
 Install the latest version with
