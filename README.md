@@ -3,7 +3,7 @@
 
 Don't worry, Be happy
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/c892e96e789572222762/maintainability)](https://codeclimate.com/github/shubinmi/salesforce-bulk-api/maintainability) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/shubinmi/salesforce-bulk-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c892e96e789572222762/maintainability)](https://codeclimate.com/github/shubinmi/salesforce-bulk-api/maintainability) [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/shubinmi/salesforce-bulk-api) [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php) [![Build Status](https://travis-ci.org/shubinmi/salesforce-bulk-api.svg?branch=master)](https://travis-ci.org/shubinmi/salesforce-bulk-api)
 
 ## Installation
 
