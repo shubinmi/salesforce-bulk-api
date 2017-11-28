@@ -6,3 +6,5 @@ php:
   - '7.1'
   - hhvm # on Trusty only
   - nightly
+
+script: ./vendor/phpunit/phpunit/phpunit --coverage-text ./tests/services
