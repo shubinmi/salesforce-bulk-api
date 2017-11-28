@@ -5,4 +5,4 @@ php:
   - '7.1'
   - nightly
 before_script: composer require phpunit/phpunit:^5.7
-script: ./vendor/phpunit/phpunit/phpunit ./tests/services
+script: ./vendor/bin/phpunit
