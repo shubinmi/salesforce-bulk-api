@@ -27,8 +27,9 @@ class JobSFApiService
      * @param LoginParams $params
      * @param array       $guzzleHttpClientConfig
      */
-    public function __construct(LoginParams $params, array $guzzleHttpClientConfig = ['timeout' => 3])
-    {
+    public function __construct(
+        LoginParams $params, array $guzzleHttpClientConfig = ['timeout' => 3]
+    ) {
         $this->api = new ApiSalesforce($params, $guzzleHttpClientConfig);
     }
 
@@ -36,6 +37,7 @@ class JobSFApiService
      * @param CreateJobDto $dto
      *
      * @return $this
+     * @throws \Exception
      */
     public function initJob(CreateJobDto $dto)
     {
@@ -49,6 +51,7 @@ class JobSFApiService
      * @param array $data
      *
      * @return $this
+     * @throws \Exception
      */
     public function addBatchToJob(array $data)
     {
@@ -59,10 +62,13 @@ class JobSFApiService
      * @param string $query
      *
      * @return $this
+     * @throws \Exception
      */
     public function addQueryBatchToJob($query)
     {
-        $batch = BatchApiSF::addToJob($this->api, $this->job->getJobInfo(), $query);
+        $batch = BatchApiSF::addToJob(
+            $this->api, $this->job->getJobInfo(), $query
+        );
         $this->job->addBatchInfo($batch);
 
         return $this;
@@ -70,6 +76,7 @@ class JobSFApiService
 
     /**
      * @return $this
+     * @throws \Exception
      */
     public function closeJob()
     {
@@ -81,13 +88,19 @@ class JobSFApiService
 
     /**
      * @return $this
+     * @throws \Exception
      */
     public function waitingForComplete()
     {
-        $batches = BatchApiSF::infoForAllInJob($this->api, $this->job->getJobInfo());
+        $batches = BatchApiSF::infoForAllInJob(
+            $this->api, $this->job->getJobInfo()
+        );
         $this->job->setBatchesInfo($batches);
         foreach ($batches as $batch) {
-            if (in_array($batch->getState(), [BatchInfoDto::STATE_IN_PROGRESS, BatchInfoDto::STATE_QUEUED])) {
+            if (in_array(
+                $batch->getState(),
+                [BatchInfoDto::STATE_IN_PROGRESS, BatchInfoDto::STATE_QUEUED]
+            )) {
                 sleep(rand(1, 3));
                 return $this->waitingForComplete();
             }
@@ -98,12 +111,15 @@ class JobSFApiService
 
     /**
      * @return ResultAtBatchDto[][]
+     * @throws \Exception
      */
     public function getResults()
     {
         $results = [];
         foreach ($this->job->getBatchesInfo() as $batchInfoDto) {
-            $results[$batchInfoDto->getId()] = BatchApiSF::results($this->api, $batchInfoDto);
+            $results[$batchInfoDto->getId()] = BatchApiSF::results(
+                $this->api, $batchInfoDto
+            );
         }
         $this->job->setBatchesResults($results);
 
@@ -112,6 +128,7 @@ class JobSFApiService
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getQueriesResults()
     {
@@ -123,13 +140,14 @@ class JobSFApiService
             $queriesResults[$batchId] = [];
             /** @var ResultAtBatchDto $result */
             foreach ($results as $result) {
-                $resultId    = $result->getId() ?: $result->getResult();
+                $resultId = $result->getId() ?: $result->getResult();
                 $batchesInfo = $this->job->getBatchesInfo();
                 if (empty($batchesInfo[$batchId])) {
                     return $queriesResults;
                 }
-                $queriesResults[$batchId][$resultId] =
-                    BatchApiSF::result($this->api, $batchesInfo[$batchId], $resultId);
+                $queriesResults[$batchId][$resultId] = BatchApiSF::result(
+                    $this->api, $batchesInfo[$batchId], $resultId
+                );
             }
         }
 
@@ -138,6 +156,7 @@ class JobSFApiService
 
     /**
      * @return SFBatchErrors[]
+     * @throws \Exception
      */
     public function getErrors()
     {

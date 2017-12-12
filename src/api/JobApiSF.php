@@ -20,6 +20,7 @@ class JobApiSF
      * @param CreateJobDto  $dto
      *
      * @return JobInfoDto
+     * @throws \Exception
      */
     public static function create(ApiSalesforce $api, CreateJobDto $dto)
     {
@@ -43,6 +44,7 @@ class JobApiSF
      * @param JobInfoDto    $job
      *
      * @return JobInfoDto
+     * @throws \Exception
      */
     public static function detail(ApiSalesforce $api, JobInfoDto $job)
     {
@@ -65,6 +67,7 @@ class JobApiSF
      * @param JobInfoDto    $job
      *
      * @return JobInfoDto
+     * @throws \Exception
      */
     public static function close(ApiSalesforce $api, JobInfoDto $job)
     {

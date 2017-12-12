@@ -27,6 +27,13 @@ class LoginResponseDto extends ConstructFromArrayOrJson
      */
     protected $instance;
 
+    /**
+     * LoginResponseDto constructor.
+     *
+     * @param null $params
+     *
+     * @throws SFClientException
+     */
     public function __construct($params = null)
     {
         if (!$params instanceof \DOMDocument) {

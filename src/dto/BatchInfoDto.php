@@ -59,6 +59,11 @@ class BatchInfoDto extends ConstructFromArrayOrJson
     /**
      * @var string
      */
+    protected $stateMessage;
+
+    /**
+     * @var string
+     */
     protected $systemModstamp;
 
     /**
@@ -144,5 +149,24 @@ class BatchInfoDto extends ConstructFromArrayOrJson
     public function getTotalProcessingTime()
     {
         return $this->totalProcessingTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateMessage()
+    {
+        return $this->stateMessage;
+    }
+
+    /**
+     * @param string $stateMessage
+     *
+     * @return $this
+     */
+    public function setStateMessage($stateMessage)
+    {
+        $this->stateMessage = $stateMessage;
+        return $this;
     }
 }

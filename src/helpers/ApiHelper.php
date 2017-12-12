@@ -16,7 +16,9 @@ class ApiHelper
      * @param ApiSalesforce $service
      *
      * @return Response
-     * @throws \Exception
+     * @throws ApiRequestException
+     * @throws ApiResponseException
+     * @throws HttpClientException
      */
     public static function getResponse(Request $request, ApiSalesforce $service)
     {

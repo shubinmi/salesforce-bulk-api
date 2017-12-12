@@ -39,6 +39,7 @@ class ApiSalesforce
     /**
      * @param LoginParams $loginParams
      * @param array       $guzzleHttpClientConfig
+     * @throws \Exception
      */
     public function __construct(LoginParams $loginParams, array $guzzleHttpClientConfig = ['timeout' => 3])
     {

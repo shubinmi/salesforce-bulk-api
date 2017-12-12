@@ -5,6 +5,9 @@ namespace SalesforceBulkApi\api;
 use SalesforceBulkApi\dto\BatchInfoDto;
 use SalesforceBulkApi\dto\JobInfoDto;
 use SalesforceBulkApi\dto\ResultAtBatchDto;
+use SalesforceBulkApi\exceptions\ApiRequestException;
+use SalesforceBulkApi\exceptions\ApiResponseException;
+use SalesforceBulkApi\exceptions\HttpClientException;
 use SalesforceBulkApi\exceptions\SFClientException;
 use SalesforceBulkApi\helpers\ApiHelper;
 use SalesforceBulkApi\services\ApiSalesforce;
@@ -23,6 +26,7 @@ class BatchApiSF
      * @param string (json) $data
      *
      * @return BatchInfoDto
+     * @throws \Exception
      */
     public static function addToJob(ApiSalesforce $api, JobInfoDto $job, $data)
     {
@@ -47,6 +51,7 @@ class BatchApiSF
      * @param BatchInfoDto  $batch
      *
      * @return BatchInfoDto
+     * @throws \Exception
      */
     public static function info(ApiSalesforce $api, BatchInfoDto $batch)
     {
@@ -72,6 +77,7 @@ class BatchApiSF
      *
      * @return BatchInfoDto[]
      * @throws SFClientException
+     * @throws \Exception
      */
     public static function infoForAllInJob(ApiSalesforce $api, JobInfoDto $job)
     {
@@ -108,6 +114,9 @@ class BatchApiSF
      *
      * @return ResultAtBatchDto[]
      * @throws SFClientException
+     * @throws ApiRequestException
+     * @throws ApiResponseException
+     * @throws HttpClientException
      */
     public static function results(ApiSalesforce $api, BatchInfoDto $batch)
     {
@@ -146,6 +155,7 @@ class BatchApiSF
      *
      * @return array
      * @throws SFClientException
+     * @throws \Exception
      */
     public static function result(ApiSalesforce $api, BatchInfoDto $batch, $batchResultId)
     {

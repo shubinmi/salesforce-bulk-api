@@ -9,12 +9,13 @@ class JobServiceTest extends TestCase
 {
     /**
      * @return array
+     * @throws \Exception
      */
     public function testInsert()
     {
-        $email1     = 'mr.smith' . time() . '@qa' . rand(1000, 9999) . '.com';
-        $email2     = 'msr.smith' . time() . '@qa' . rand(1000, 9999) . '.com';
-        $john       = [
+        $email1 = 'mr.smith' . time() . '@qa' . rand(1000, 9999) . '.com';
+        $email2 = 'msr.smith' . time() . '@qa' . rand(1000, 9999) . '.com';
+        $john = [
             'Email'             => $email1,
             'FirstName'         => 'Brad',
             'LastName'          => 'Smith',
@@ -24,7 +25,7 @@ class JobServiceTest extends TestCase
             'NumberOfEmployees' => '2',
             'Description'       => 'These fuckers get younger every year.'
         ];
-        $jane       = [
+        $jane = [
             'Email'             => $email2,
             'FirstName'         => 'Angelina',
             'LastName'          => 'Smith',
@@ -34,13 +35,13 @@ class JobServiceTest extends TestCase
             'NumberOfEmployees' => '2',
             'Description'       => 'Happy endings are just stories that haven\'t finished yet.'
         ];
-        $data1      = [$john];
-        $data2      = [$jane];
+        $data1 = [$john];
+        $data2 = [$jane];
         $jobRequest = (new CreateJobDto)
             ->setObject('Lead')
             ->setOperation(CreateJobDto::OPERATION_INSERT);
-        $insertJob  = JobServiceFactory::makeJobService();
-        $errors     = $insertJob->initJob($jobRequest)
+        $insertJob = JobServiceFactory::makeJobService();
+        $errors = $insertJob->initJob($jobRequest)
             ->addBatchToJob($data1)
             ->addBatchToJob($data2)
             ->closeJob()
@@ -58,15 +59,16 @@ class JobServiceTest extends TestCase
      * @param array $insertedData
      *
      * @return array
+     * @throws \Exception
      */
     public function testQueryAfterInsert(array $insertedData)
     {
-        $john       = $insertedData['john'];
-        $jane       = $insertedData['jane'];
+        $john = $insertedData['john'];
+        $jane = $insertedData['jane'];
         $jobRequest = (new CreateJobDto)
             ->setObject('Lead')
             ->setOperation(CreateJobDto::OPERATION_QUERY);
-        $selectJob  = JobServiceFactory::makeJobService();
+        $selectJob = JobServiceFactory::makeJobService();
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $errors = $selectJob->initJob($jobRequest)
@@ -78,15 +80,17 @@ class JobServiceTest extends TestCase
         $this->assertTrue(empty($errors));
 
         $selectJob->getResults();
-        $jobResults     = $selectJob->getQueriesResults();
+        $jobResults = $selectJob->getQueriesResults();
         $batchesResults = current($jobResults);
-        $gotJohnData    = false;
-        $gotJaneData    = false;
+        $gotJohnData = false;
+        $gotJaneData = false;
         foreach ($batchesResults as $results) {
             foreach ($results as $item) {
-                if ($item['Email'] == $john['Email'] && $item['FirstName'] == $john['FirstName']) {
+                if ($item['Email'] == $john['Email']
+                    && $item['FirstName'] == $john['FirstName']) {
                     $gotJohnData = true;
-                } elseif ($item['Email'] == $jane['Email'] && $item['FirstName'] == $jane['FirstName']) {
+                } elseif ($item['Email'] == $jane['Email']
+                    && $item['FirstName'] == $jane['FirstName']) {
                     $gotJaneData = true;
                 }
             }
@@ -104,12 +108,15 @@ class JobServiceTest extends TestCase
      * @param array $insertedData
      *
      * @return array
+     * @throws \Exception
      */
     public function testUpsert(array $insertedData)
     {
         $insertedData['john']['FirstName'] = 'John';
-        $insertedData['jr']                = [
-            'Email'             => 'john.jr.smith' . time() . '@qa' . rand(1000, 9999) . '.com',
+        $insertedData['jr'] = [
+            'Email'             => 'john.jr.smith' . time() . '@qa' . rand(
+                    1000, 9999
+                ) . '.com',
             'FirstName'         => 'John Jr.',
             'LastName'          => 'Smith',
             'Company'           => 'SFPHPClient',
@@ -123,8 +130,8 @@ class JobServiceTest extends TestCase
             ->setObject('Lead')
             ->setOperation(CreateJobDto::OPERATION_UPSERT)
             ->setExternalIdFieldName('Email');
-        $upsertJob  = JobServiceFactory::makeJobService();
-        $errors     = $upsertJob->initJob($jobRequest)
+        $upsertJob = JobServiceFactory::makeJobService();
+        $errors = $upsertJob->initJob($jobRequest)
             ->addBatchToJob([$insertedData['john'], $insertedData['jr']])
             ->closeJob()
             ->waitingForComplete()
@@ -141,15 +148,16 @@ class JobServiceTest extends TestCase
      * @param array $insertedData
      *
      * @return array
+     * @throws \Exception
      */
     public function testQueryAfterUpsert(array $insertedData)
     {
-        $john       = $insertedData['john'];
-        $jr         = $insertedData['jr'];
+        $john = $insertedData['john'];
+        $jr = $insertedData['jr'];
         $jobRequest = (new CreateJobDto)
             ->setObject('Lead')
             ->setOperation(CreateJobDto::OPERATION_QUERY);
-        $selectJob  = JobServiceFactory::makeJobService();
+        $selectJob = JobServiceFactory::makeJobService();
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $errors = $selectJob->initJob($jobRequest)
@@ -161,15 +169,17 @@ class JobServiceTest extends TestCase
         $this->assertTrue(empty($errors));
 
         $selectJob->getResults();
-        $jobResults     = $selectJob->getQueriesResults();
+        $jobResults = $selectJob->getQueriesResults();
         $batchesResults = current($jobResults);
-        $gotJohnData    = false;
-        $gotJrData      = false;
+        $gotJohnData = false;
+        $gotJrData = false;
         foreach ($batchesResults as $results) {
             foreach ($results as $item) {
-                if ($item['Email'] == $john['Email'] && $item['FirstName'] == $john['FirstName']) {
+                if ($item['Email'] == $john['Email']
+                    && $item['FirstName'] == $john['FirstName']) {
                     $gotJohnData = true;
-                } elseif ($item['Email'] == $jr['Email'] && $item['FirstName'] == $jr['FirstName']) {
+                } elseif ($item['Email'] == $jr['Email']
+                    && $item['FirstName'] == $jr['FirstName']) {
                     $gotJrData = true;
                 }
             }
@@ -179,5 +189,28 @@ class JobServiceTest extends TestCase
         $this->assertTrue($gotJrData);
 
         return $insertedData;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testErrorOnQuery()
+    {
+        $jobRequest = (new CreateJobDto)
+            ->setObject('Lead')
+            ->setOperation(CreateJobDto::OPERATION_QUERY);
+        $selectJob = JobServiceFactory::makeJobService();
+        /** @noinspection SqlDialectInspection */
+        /** @noinspection SqlNoDataSourceInspection */
+        $errors = $selectJob->initJob($jobRequest)
+            ->addQueryBatchToJob("SELECT Email1,FirstName FROM Lead")
+            ->closeJob()
+            ->waitingForComplete()
+            ->getErrors();
+
+        $this->assertTrue(!empty($errors));
+        $this->assertContains(
+            'INVALID_FIELD', $errors[0]->getBatchInfo()->getStateMessage()
+        );
     }
 }
