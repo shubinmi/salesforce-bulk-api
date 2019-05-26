@@ -19,8 +19,8 @@
         }
     ],
     "support": {
-        "wiki": "https://github.com/shubinmi/salesforce-bulk-api",
-        "source": "https://github.com/shubinmi/salesforce-bulk-api"
+        "wiki": "https://github.com/sharmasabhay/salesforce-bulk-api",
+        "source": "https://github.com/sharmasabhay/salesforce-bulk-api"
     },
     "require": {
         "php": ">=5.6",
