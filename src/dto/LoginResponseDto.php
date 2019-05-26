@@ -44,7 +44,7 @@ class LoginResponseDto extends ConstructFromArrayOrJson
             $this->serverUrl = $params->getElementsByTagName('serverUrl')[0]->nodeValue;
             $this->sessionId = $params->getElementsByTagName('sessionId')[0]->nodeValue;
             $this->userId    = $params->getElementsByTagName('userId')[0]->nodeValue;
-            $this->instance  = explode('.', str_replace('https://', '', $this->serverUrl))[0];
+            $this->instance  = explode('.salesforce.com', str_replace('https://', '', $this->serverUrl))[0];
         } catch (\Exception $e) {
             throw new SFClientException('SF Api waiting behavior changed. Parse response error: ' . $e->getMessage());
         }
