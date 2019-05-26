@@ -20,7 +20,7 @@ Don't worry, Be happy
 Install the latest version with
 
 ```bash
-$ composer require shubinmi/salesforce-bulk-api
+$ composer require sharmasabhay/salesforce-bulk-api
 ```
 
 ## Basic Usage
