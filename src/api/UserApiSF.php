@@ -94,6 +94,9 @@ XML;
         $login = $params->getUserName();
         $pass  = $params->getUserPass() . $params->getUserSecretToken();
 
+        $login = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
+        $pass = htmlspecialchars($pass, ENT_QUOTES, 'UTF-8');
+
         return sprintf($xml, $login, $pass);
     }
 }
