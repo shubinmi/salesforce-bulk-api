@@ -23,7 +23,7 @@ class ApiHelper
     public static function getResponse(Request $request, ApiSalesforce $service)
     {
         try {
-            $response = $service->send($request);
+            $response = $service->send($request, [ 'timeout' => 0 ]);
         } catch (\Exception $e) {
             throw new HttpClientException($e->getMessage());
         }
