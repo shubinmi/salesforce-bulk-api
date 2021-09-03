@@ -40,7 +40,7 @@ class UserApiSF
             self::getXml($api->getLoginParams())
         );
         try {
-            $response = $api->send($request);
+            $response = $api->send($request, [ 'timeout' => 0 ]);
         } catch (\Exception $e) {
             throw new HttpClientException($e->getMessage());
         }
