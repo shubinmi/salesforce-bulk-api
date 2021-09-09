@@ -192,6 +192,14 @@ class JobSFApiService
     }
 
     /**
+     * @return SFJob
+     */
+    public function getJob()
+    {
+        return $this->job;
+    }
+
+    /**
      * @return string
      */
     public function getJobId()
