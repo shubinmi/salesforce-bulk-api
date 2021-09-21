@@ -39,84 +39,103 @@ $params = (new LoginParams)
     ->setUserPass('MySFPass')
     ->setUserSecretToken('mySecretTokenFomSF');
 
-// Set up Insert SF job
+// (optional) Flag as Sandbox
+// $params->setEndpointPrefixAsSandbox();
+
+// Set up SF job
 $jobRequest = (new CreateJobDto)
     ->setObject('My_User__c')
-    ->setOperation(CreateJobDto::OPERATION_INSERT);
+    ->setOperation(CreateJobDto::OPERATION_INSERT); // Use CreateJobDto::OPERATION_UPSERT for upsert operation
 
-// Data for Insert to custom SF entity
-$data1 = [
-    [
-        'Email__c' => 'new@user.net',
-        'First_Name__c' => 'New Net'
-    ],
-    [
-        'Email__c' => 'new@user.org',
-        'First_Name__c' => 'New Org'
-    ]
-];
-$data2 = [
-    [
-        'Email__c' => 'new1@user.net',
-        'First_Name__c' => 'New1 Net'
-    ],
-    [
-        'Email__c' => 'new1@user.org',
-        'First_Name__c' => 'New1 Org'
-    ]
-];
+// (optional if Upsert) Set an External Id
+// $upsertKey = 'My_External_Id__c';
+// $jobRequest->setExternalIdFieldName($upsertKey);
 
-// Init Insert job and pull data
-$insertJob = (new JobSFApiService($params))
-    ->initJob($jobRequest)
-    ->addBatchToJob($data1)
-    ->addBatchToJob($data2)
-    ->closeJob();
-
-// Set up params for Upsert SF job
-$jobRequest
-    ->setOperation(CreateJobDto::OPERATION_UPSERT)
-    ->setExternalIdFieldName('Email__c');
-
-// Do Upsert job
-$upsertJob = new JobSFApiService($params);
-$upsertJob->initJob($jobRequest);
-
+// Data Batches
 $data = [
-    [
-        'Email__c' => 'new@user.net',
-        'First_Name__c' => 'Not new Net'
+    [ // Batch 1
+        [
+            'Email__c' => 'new@user.net',
+            'First_Name__c' => 'New Net'
+        ],
+        [
+            'Email__c' => 'new@user.org',
+            'First_Name__c' => 'New Org'
+        ],
     ],
-    [
-        'Email__c' => 'new@user.com',
-        'First_Name__c' => 'New Com'
-    ]
+    [ // Batch 2
+        [
+            'Email__c' => 'new1@user.net',
+            'First_Name__c' => 'New1 Net'
+        ],
+        [
+            'Email__c' => 'new1@user.org',
+            'First_Name__c' => 'New1 Org'
+        ],
+    ],
+    [ // Batch 3
+        [
+            'Email__c' => 'new2@user.net',
+            'First_Name__c' => 'New2 Net'
+        ],
+        [
+            'Email__c' => 'new2@user.org',
+            'First_Name__c' => 'New2 Org'
+        ],
+    ],
 ];
-$upsertJob
-    ->addBatchToJob($data)
-    ->closeJob();
+
+// Init Job
+$jobService = (new JobSFApiService($params))
+    ->initJob($jobRequest);
+
+// Add batches of data, can be up to 10000 records long each
+foreach ($data as $batchData) {
+    $jobService->addBatchToJob($batchData);
+}
+
+// Gather up an ordered list of Batch ids to reference data in the batch, specifically on error handling
+// JobSFApiService::waitingForComplete update job statuses in the order returned from Salesforce
+// This new order is not necessarily the same order the data was submitted in making referencing the original data difficult
+$job = $jobService->getJob();
+$batchesInfo = $job->getBatchesInfo();
+$batchIdReference = array_flip(array_map(function($batchInfoDto){
+    return $batchInfoDto->getId();
+}, $batchesInfo));
+
+// Close Job and Wait for Job completion
+$jobService
+    ->closeJob()
+    ->waitingForComplete();
 
 // Collect jobs errors
-$errorsOnInsert = $insertJob->waitingForComplete()->getErrors();
-$errorsOnUpsert = $upsertJob->waitingForComplete()->getErrors();
+$errors = $jobService->getErrors();
 
 // Operate with errors
-foreach ($errorsOnInsert as $error) {
+foreach ($errors as $error) {
+    
     /** @var SFBatchErrors $error */
     $errorsBatch         = $error->getBatchInfo();
+    $batchId             = $errorsBatch->getId();
+    $batchNo             = $batchIdReference[$batchId];
     $errorsMsg           = $error->getErrorMessages();
     $errorsElementNumber = $error->getErrorNumbers();
+
     if (empty($errorsElementNumber)) {
-        echo 'Batch ' . $errorsBatch->getId() . ' return ' . $errorsBatch->getState() . PHP_EOL;
+        // No specific errors
+        echo "Batch $batchId (#$batchNo) returned a general error" . PHP_EOL;
+        echo "\tState: " . $errorsBatch->getState() . ' (' . $errorsBatch->getStateMessage() . ')' . PHP_EOL;
+        echo "\tNote: An error here might mean the data types sent are incorrect (eg \"0\" vs 0/false)." . PHP_EOL;
     } else {
-        echo 'Batch ' . $errorsBatch->getId() . ' fail for next rows:' . PHP_EOL;
+        echo "Batch $batchId (#$batchNo) failed for following rows:" . PHP_EOL;
         foreach ($errorsElementNumber as $errorMsgKey => $errorRowNumber) {
-            echo 'Row number = ' . $errorRowNumber 
-                . ' Error message = ' . $errorsMsg[$errorMsgKey] . PHP_EOL;
+            echo "\tRow number = " . $errorRowNumber . " Error message = " . $errorsMsg[$errorMsgKey] . PHP_EOL;
+            $record = $data[$batchNo][$errorRowNumber];
+            echo "\t\tEmail = " . $record['Email__c'] . PHP_EOL;
+            echo "\t\tFirst Name = " .  $record['First_Name__c'] . PHP_EOL;
         }
     }
 }
-
 ```
 
 ## Contribute safely
